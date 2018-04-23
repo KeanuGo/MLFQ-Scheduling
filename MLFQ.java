@@ -39,6 +39,7 @@ public class MLFQ extends Thread{
 		
 	}
 	public void run() {
+		st= false;
 		qp.removeAll();
 		qp.setLayout(new FlowLayout());
 		scheduler= new String[noOfqueues];
@@ -303,11 +304,18 @@ public class MLFQ extends Thread{
 				}
 			}
 		}else{
+			ArrayList<PCB> rem= new ArrayList<PCB>();
+			int now=0;
 			start=0;
 			int tm= time[0];
 			if(!schedAssign[0].equals("RR")){
+				//z=now;
+				//pcqinit= new PCBQueue(pcb1);
 				st= true;
 				while(true){
+					//pcqinit= new PCBQueue(pcb1);
+					
+					
 					boolean idle= true;
 					for(int i=0; i< noOfqueues; i++){
 						if(pcq[i].getPCB().size()!=0){
@@ -321,13 +329,24 @@ public class MLFQ extends Thread{
 						start=start+x;
 					}
 					idle=true;
+					
 					if(pcqinit.show().getArrival_time()<=z){
-						if(pcqinit.getSize()>0){
+						while(pcqinit.getSize()>0){
 							pcq[point].insert(pcqinit.dequeue());
 						}
-						artime=tm;
-						exec(schedAssign[point], point, rrAssign[point], true);
+						if(schedAssign[point].equals("SJF")||schedAssign[point].equals("NonPPrS")||schedAssign[point].equals("FCFS")){
+							artime=tm;
+							exec(schedAssign[point], point, rrAssign[point], true);
+							now=z;
+							pcqinit= new PCBQueue(pcb1);
+							//if(z>=artime)
 						tm= tm+(time[point]);
+						}else{
+							exec(schedAssign[point], point, rrAssign[point], false);
+						}
+						
+					
+						
 						
 						if(befre!=pcq[point].show1()){
 							befre=pcq[point].show1();
@@ -338,6 +357,10 @@ public class MLFQ extends Thread{
 						}
 						int siz= pcq[point].getSize();
 						for(int j=0; j<siz; j++){
+							if(schedAssign[point].equals("SJF")||schedAssign[point].equals("NonPPrS")||schedAssign[point].equals("FCFS")){
+							}else{
+								artime=tm;
+							}
 							PCB pr;
 							
 							JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
@@ -355,9 +378,29 @@ public class MLFQ extends Thread{
 							  throw new RuntimeException(e);
 							}
 							pcq[point].rm(pr);
+							if(pr.getBurst_time()<=0){
+								pcqinit.rm(pr);
+								rem.add(pr);
+							}
+								
 							if(pr.getBurst_time()>0){
 								if(schedAssign[point].equals("SJF")||schedAssign[point].equals("NonPPrS")||schedAssign[point].equals("FCFS")){
 									pcq[point].insert(pr);
+									pcqinit.update(pr);
+								}else{
+									if(pcq[point].show1()>artime){
+										qp.add(new JLabel(Integer.toString(artime)));
+										lad= new JLabel("P"+ pr.getPid());
+										lad.setBorder(new LineBorder(Color.BLACK, 2));
+										qp.add(lad);
+										refresh();
+										try {
+										  sleep(1000);
+										} catch (InterruptedException e) {
+										  throw new RuntimeException(e);
+										}
+										tm= tm+(time[point]);
+									}
 								}
 							}
 							if(befre!=pcq[point].show1()){
@@ -369,9 +412,22 @@ public class MLFQ extends Thread{
 							}
 							
 						}
+						if(schedAssign[point].equals("SJF")||schedAssign[point].equals("NonPPrS")||schedAssign[point].equals("FCFS")){
+						}else{
+							break;
+						}
 						if(z==totalbursttime+start){
 							break;
 						}
+					}
+					for(int m=0; m<rem.size(); m++){
+						pcqinit.rm(rem.get(m));
+					}
+					if(schedAssign[point].equals("SJF")||schedAssign[point].equals("NonPPrS")||schedAssign[point].equals("FCFS")){
+					pcq[point].reset();
+					pcq[point].removeA();
+					pcqinit.FCFS(false);
+					z=artime;
 					}
 				}
 			}else{
