@@ -23,9 +23,6 @@ public class PCBQueue{
 			for(int i=0; i<pcb.size(); i++){
 				enqueue(pcb.get(i));
 				MLFQ.z+=(pcb.get(i)).getBurst_time();
-				pcb.get(i).setCompletion_time(MLFQ.z);
-				pcb.get(i).setTurnaround_time(pcb.get(i).getCompletion_time() - pcb.get(i).getArrival_time());
-				pcb.get(i).setWait_time(pcb.get(i).getTurnaround_time() - pcb.get(i).getorigBurst_time());
 				q1.add(MLFQ.z);
 				if(i+1<pcb.size()){
 					if(MLFQ.z<pcb.get(i+1).getArrival_time()){
@@ -42,19 +39,12 @@ public class PCBQueue{
 					pcb.get(i).setBurst_time(pcb.get(i).getBurst_time()-(MLFQ.artime-MLFQ.z));
 					enqueue(pcb.get(i));
 					MLFQ.z+=(MLFQ.artime-MLFQ.z);
-					pcb.get(i).setCompletion_time(MLFQ.z);
-					pcb.get(i).setTurnaround_time(pcb.get(i).getCompletion_time() - pcb.get(i).getArrival_time());
-					pcb.get(i).setWait_time(pcb.get(i).getTurnaround_time() - pcb.get(i).getorigBurst_time());
 					q1.add(MLFQ.z);
 					break;
 				}else{
 					MLFQ.z+=(pcb.get(i)).getBurst_time();
 					pcb.get(i).setBurst_time(0);
 					enqueue(pcb.get(i));
-					
-					pcb.get(i).setCompletion_time(MLFQ.z);
-					pcb.get(i).setTurnaround_time(pcb.get(i).getCompletion_time() - pcb.get(i).getArrival_time());
-					pcb.get(i).setWait_time(pcb.get(i).getTurnaround_time() - pcb.get(i).getorigBurst_time());
 					q1.add(MLFQ.z);
 				}
 			}
@@ -118,26 +108,17 @@ public class PCBQueue{
 				}
 				for(int i=0; i<last.size(); i++){
 					if(!preempt){
-						last.get(i).setWait_time(MLFQ.z);
 						MLFQ.z+=(last.get(i)).getBurst_time();
 						last.get(i).setBurst_time(0);
 						enqueue(last.get(i));
 					}else{
 						if((MLFQ.z+last.get(i).getBurst_time())>=MLFQ.artime){
-							last.get(i).setWait_time(MLFQ.z);
-							
 							last.get(i).setBurst_time(last.get(i).getBurst_time()-(MLFQ.artime-MLFQ.z));
 							enqueue(last.get(i));
 							MLFQ.z+=(MLFQ.artime-MLFQ.z);
 							q1.add(MLFQ.z);
-							for(int j=0; j<pcb.size(); j++){
-								if(last.get(i)==pcb.get(j)){
-									pcb.get(j).setCompletion_time(MLFQ.z);
-								}
-							}
 							break;
 						}else{
-							last.get(i).setWait_time(MLFQ.z);
 							MLFQ.z+=(last.get(i)).getBurst_time();
 							last.get(i).setBurst_time(0);
 							enqueue(last.get(i));
@@ -145,11 +126,6 @@ public class PCBQueue{
 					}
 					
 					//last.remove(i);
-					for(int j=0; j<pcb.size(); j++){
-						if(last.get(i)==pcb.get(j)){
-							pcb.get(j).setCompletion_time(MLFQ.z);
-						}
-					}
 					q1.add(MLFQ.z);
 				}
 				break;
@@ -174,12 +150,6 @@ public class PCBQueue{
 								//System.out.println("VVVV"+pcb.get(i).getPid());
 								pcb.get(i).finish=true;
 								
-							}
-						}
-						
-						for(int j=0; j<pcb.size(); j++){
-							if(temp0==pcb.get(j)){
-								pcb.get(j).setCompletion_time(MLFQ.z);
 							}
 						}
 						q1.add(MLFQ.z);
@@ -208,12 +178,6 @@ public class PCBQueue{
 								
 							}
 						}
-						
-						for(int j=0; j<pcb.size(); j++){
-							if(temp0.getPid()==pcb.get(j).getPid()){
-								pcb.get(j).setCompletion_time(MLFQ.z);
-							}
-						}
 						q1.add(MLFQ.z);
 						
 						if(MLFQ.z<pcb.get(m+1).getArrival_time()&&(imagine.size()<=0)){
@@ -237,13 +201,6 @@ public class PCBQueue{
 			//	break;
 			//}
 		}
-		
-		for(int i=0; i<pcb.size(); i++){
-			pcb.get(i).setTurnaround_time(pcb.get(i).getCompletion_time() - pcb.get(i).getArrival_time());
-			pcb.get(i).setWait_time(pcb.get(i).getTurnaround_time() - pcb.get(i).getorigBurst_time());
-		}
-		
-		
 	}
 	public void NonPPrS(boolean preempt){
 		
@@ -303,26 +260,17 @@ public class PCBQueue{
 				}
 				for(int i=0; i<last.size(); i++){
 					if(!preempt){
-						last.get(i).setWait_time(MLFQ.z);
 						MLFQ.z+=(last.get(i)).getBurst_time();
 						last.get(i).setBurst_time(0);
 						enqueue(last.get(i));
 					}else{
 						if((MLFQ.z+last.get(i).getBurst_time())>=MLFQ.artime){
-							last.get(i).setWait_time(MLFQ.z);
-							
 							last.get(i).setBurst_time(last.get(i).getBurst_time()-(MLFQ.artime-MLFQ.z));
 							enqueue(last.get(i));
 							MLFQ.z+=(MLFQ.artime-MLFQ.z);
 							q1.add(MLFQ.z);
-							for(int j=0; j<pcb.size(); j++){
-								if(last.get(i)==pcb.get(j)){
-									pcb.get(j).setCompletion_time(MLFQ.z);
-								}
-							}
 							break;
 						}else{
-							last.get(i).setWait_time(MLFQ.z);
 							MLFQ.z+=(last.get(i)).getBurst_time();
 							last.get(i).setBurst_time(0);
 							enqueue(last.get(i));
@@ -330,11 +278,6 @@ public class PCBQueue{
 					}
 					
 					//last.remove(i);
-					for(int j=0; j<pcb.size(); j++){
-						if(last.get(i)==pcb.get(j)){
-							pcb.get(j).setCompletion_time(MLFQ.z);
-						}
-					}
 					q1.add(MLFQ.z);
 				}
 				break;
@@ -359,12 +302,6 @@ public class PCBQueue{
 								//System.out.println("VVVV"+pcb.get(i).getPid());
 								pcb.get(i).finish=true;
 								
-							}
-						}
-						
-						for(int j=0; j<pcb.size(); j++){
-							if(temp0==pcb.get(j)){
-								pcb.get(j).setCompletion_time(MLFQ.z);
 							}
 						}
 						q1.add(MLFQ.z);
@@ -393,12 +330,6 @@ public class PCBQueue{
 								
 							}
 						}
-						
-						for(int j=0; j<pcb.size(); j++){
-							if(temp0.getPid()==pcb.get(j).getPid()){
-								pcb.get(j).setCompletion_time(MLFQ.z);
-							}
-						}
 						q1.add(MLFQ.z);
 						
 						if(MLFQ.z<pcb.get(m+1).getArrival_time()&&(imagine.size()<=0)){
@@ -421,11 +352,6 @@ public class PCBQueue{
 			//}else{
 			//	break;
 			//}
-		}
-		
-		for(int i=0; i<pcb.size(); i++){
-			pcb.get(i).setTurnaround_time(pcb.get(i).getCompletion_time() - pcb.get(i).getArrival_time());
-			pcb.get(i).setWait_time(pcb.get(i).getTurnaround_time() - pcb.get(i).getorigBurst_time());
 		}
 		
 	}
@@ -499,13 +425,6 @@ public class PCBQueue{
 				enqueue(pcb3=imagine.remove(0));
 				//System.out.println("A"+pcb3.getPid());
 				MLFQ.z+=now;
-				for(int j=0; j<pcb.size(); j++){
-					if(pcb3==pcb.get(j)){
-						pcb.get(j).setCompletion_time(MLFQ.z);
-						pcb.get(j).setTurnaround_time(pcb.get(j).getCompletion_time() - pcb.get(j).getArrival_time());
-						pcb.get(j).setWait_time(pcb.get(j).getTurnaround_time() - pcb.get(j).getorigBurst_time());
-					}
-				}
 				q1.add(MLFQ.z);
 				
 			}
@@ -526,39 +445,30 @@ public class PCBQueue{
 					pcb.get(i).setBurst_time(pcb.get(i).getBurst_time()-quantum);
 					}else{
 						if((MLFQ.z+pcb.get(i).getBurst_time())>=MLFQ.artime){
-							
 							pcb.get(i).setBurst_time(pcb.get(i).getBurst_time()-(MLFQ.artime-MLFQ.z));
 							MLFQ.z+=(MLFQ.artime-MLFQ.z);
 							enqueue(pcb.get(i));
 							q1.add(MLFQ.z);
-							pcb.get(i).setCompletion_time(MLFQ.z);
 							break;
 						}else{
 							MLFQ.z+=quantum;
 							pcb.get(i).setBurst_time(pcb.get(i).getBurst_time()-quantum);
-							pcb.get(i).setCompletion_time(MLFQ.z);
 						}
 					}
 				}else{
 					if(!preempt){
 					MLFQ.z+=pcb.get(i).getBurst_time();
 					pcb.get(i).setBurst_time(0);
-					pcb.get(i).setCompletion_time(MLFQ.z);
 					}else{
 						if((MLFQ.z+pcb.get(i).getBurst_time())>=MLFQ.artime){
-							
-							
 							pcb.get(i).setBurst_time(pcb.get(i).getBurst_time()-(MLFQ.artime-MLFQ.z));
 							MLFQ.z+=(MLFQ.artime-MLFQ.z);
 							enqueue(pcb.get(i));
-							
 							q1.add(MLFQ.z);
-							pcb.get(i).setCompletion_time(MLFQ.z);
 							break;
 						}else{
 							MLFQ.z+=pcb.get(i).getBurst_time();
 							pcb.get(i).setBurst_time(0);
-							pcb.get(i).setCompletion_time(MLFQ.z);
 						}
 					}
 				}
@@ -616,7 +526,6 @@ public class PCBQueue{
 						System.out.println("ZXC"+next);
 						for(int j=0; j<pcb.size(); j++){
 							if(imagine.get(0)==pcb.get(j)){
-								pcb.get(j).setCompletion_time(MLFQ.z);
 								pcb.get(j).setBurst_time(now);
 								System.out.println("DDD"+pcb.get(j).getPid()+" "+now);
 								if(now!=0){
@@ -664,7 +573,6 @@ public class PCBQueue{
 						
 						for(int j=0; j<pcb.size(); j++){
 							if(imagine.get(0)==pcb.get(j)){
-								pcb.get(j).setCompletion_time(MLFQ.z);
 								pcb.get(j).setBurst_time(0);
 								pcb.get(j).finish=true;
 							}
@@ -698,7 +606,6 @@ public class PCBQueue{
 							MLFQ.z+=(next-prev);
 							for(int j=0; j<pcb.size(); j++){
 								if(imagine.get(0)==pcb.get(j)){
-									pcb.get(j).setCompletion_time(MLFQ.z);
 									pcb.get(j).setBurst_time(now);
 								}
 							}
@@ -802,7 +709,6 @@ public class PCBQueue{
 						//System.out.println("ZXC"+next);
 						for(int j=0; j<pcb.size(); j++){
 							if(imagine.get(0)==pcb.get(j)){
-								pcb.get(j).setCompletion_time(MLFQ.z);
 								pcb.get(j).setBurst_time(now);
 								//System.out.println("DDD"+pcb.get(j).getPid()+" "+now);
 								if(now!=0){
@@ -850,7 +756,6 @@ public class PCBQueue{
 						
 						for(int j=0; j<pcb.size(); j++){
 							if(imagine.get(0)==pcb.get(j)){
-								pcb.get(j).setCompletion_time(MLFQ.z);
 								pcb.get(j).setBurst_time(0);
 								pcb.get(j).finish=true;
 							}
@@ -886,7 +791,6 @@ public class PCBQueue{
 							MLFQ.z+=(next-prev);
 							for(int j=0; j<pcb.size(); j++){
 								if(imagine.get(0)==pcb.get(j)){
-									pcb.get(j).setCompletion_time(MLFQ.z);
 									pcb.get(j).setBurst_time(now);
 								}
 							}
@@ -958,11 +862,6 @@ public class PCBQueue{
 		
 		while(imagine.size()!=0){
 			MLFQ.z+=imagine.get(0).getBurst_time();
-			for(int j=0; j<pcb.size(); j++){
-				if(imagine.get(0)==pcb.get(j)){
-					pcb.get(j).setCompletion_time(MLFQ.z);
-				}
-			}
 			enqueue(imagine.remove(0));
 			q1.add(MLFQ.z);
 			if(MLFQ.z>=MLFQ.totalbursttime){
@@ -970,10 +869,6 @@ public class PCBQueue{
 			}
 		}
 		//pcb.removeAll(pcb);
-		for(int i=0; i<pcb.size(); i++){
-			pcb.get(i).setTurnaround_time(pcb.get(i).getCompletion_time() - pcb.get(i).getArrival_time());
-			pcb.get(i).setWait_time(pcb.get(i).getTurnaround_time() - pcb.get(i).getorigBurst_time());
-		}
 	}
 	public ArrayList<PCB> getPCB(){
 		return pcb;
@@ -998,8 +893,6 @@ public class PCBQueue{
 		for(int i=0; i<pcb.size(); i++){
 			if(p.getPid()==pcb.get(i).getPid()){
 				pcb.get(i).setBurst_time(p.getBurst_time());
-				pcb.get(i).setCompletion_time(p.getCompletion_time());
-				pcb.get(i).setTurnaround_time(p.getTurnaround_time());
 			}
 		}
 	}
