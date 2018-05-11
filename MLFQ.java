@@ -11,6 +11,14 @@ public class MLFQ extends Thread{
 	static int[] rrAssign;
 	static int[] priority;
 	static int[] rTime;
+	
+	static int[] startTime;
+	static int[] completionTime;
+	static int[] burstTime;
+	static int[] arrivalTime;
+	
+	static boolean[] started;
+	
 	static boolean st= false;
 	static int z=0;
 	boolean finish=false;
@@ -34,6 +42,8 @@ public class MLFQ extends Thread{
 	static JLabel process[];
 	static boolean there[][];
 	static JPanel q[];
+	static DefaultTableModel model1;
+	static int rct;
 	public MLFQ(){
 		
 		
@@ -108,6 +118,9 @@ public class MLFQ extends Thread{
 						}
 						qp.add(lad);
 						refresh();
+						if(!started[pr.getPid()-1])
+							startTime[pr.getPid()-1]= befre;
+						started[pr.getPid()-1]=true;
 						try {
 						  sleep(1000);
 						} catch (InterruptedException e) {
@@ -129,6 +142,7 @@ public class MLFQ extends Thread{
 						}else{
 							pcq[point].dequeue1();
 						}
+						completionTime[pr.getPid()-1]= befre;
 						if(pcq[point].getSize()>0){
 							if(pcq[point].show().getArrival_time()==pcq[point].show1()){
 								int c=0;
@@ -141,6 +155,7 @@ public class MLFQ extends Thread{
 								}
 							}
 						}
+						completionTime[pr.getPid()-1]= befre;
 					}
 				}else{
 					
@@ -171,6 +186,9 @@ public class MLFQ extends Thread{
 						}
 						qp.add(lad);
 						refresh();
+						if(!started[pr.getPid()-1])
+							startTime[pr.getPid()-1]= befre;
+						started[pr.getPid()-1]=true;
 						try {
 						  sleep(1000);
 						} catch (InterruptedException e) {
@@ -195,6 +213,7 @@ public class MLFQ extends Thread{
 						}else{
 							pcq[point].dequeue1();
 						}
+						completionTime[pr.getPid()-1]= befre;
 					}
 					
 					point=0;
@@ -226,6 +245,9 @@ public class MLFQ extends Thread{
 					}
 					qp.add(lad);
 					refresh();
+					if(!started[pr.getPid()-1])
+						startTime[pr.getPid()-1]= befre;
+					started[pr.getPid()-1]=true;
 					try {
 					  sleep(1000);
 					} catch (InterruptedException e) {
@@ -246,6 +268,7 @@ public class MLFQ extends Thread{
 					}else{
 						pcq[point].dequeue1();
 					}
+					completionTime[pr.getPid()-1]= befre;
 				}
 			}
 			point=(point+1)%noOfqueues;
@@ -278,6 +301,9 @@ public class MLFQ extends Thread{
 				}
 				qp.add(lad);
 				refresh();
+				if(!started[pr.getPid()-1])
+					startTime[pr.getPid()-1]= befre;
+				started[pr.getPid()-1]=true;
 				try {
 				  sleep(1000);
 				} catch (InterruptedException e) {
@@ -290,6 +316,7 @@ public class MLFQ extends Thread{
 				}else{
 					pcq[point].dequeue1();
 				}
+				completionTime[pr.getPid()-1]= befre;
 				if(pcq[point].getSize()>0){
 					if(pcq[point].show().getArrival_time()==pcq[point].show1()){
 						int c=0;
@@ -302,6 +329,7 @@ public class MLFQ extends Thread{
 						}
 					}
 				}
+				completionTime[pr.getPid()-1]= befre;
 			}
 		}else{
 			ArrayList<PCB> rem= new ArrayList<PCB>();
@@ -372,6 +400,9 @@ public class MLFQ extends Thread{
 							}
 							qp.add(lad);
 							refresh();
+							if(!started[pr.getPid()-1])
+								startTime[pr.getPid()-1]= befre;
+							started[pr.getPid()-1]=true;
 							try {
 							  sleep(1000);
 							} catch (InterruptedException e) {
@@ -394,6 +425,9 @@ public class MLFQ extends Thread{
 										lad.setBorder(new LineBorder(Color.BLACK, 2));
 										qp.add(lad);
 										refresh();
+										if(!started[pr.getPid()-1])
+											startTime[pr.getPid()-1]= befre;
+										started[pr.getPid()-1]=true;
 										try {
 										  sleep(1000);
 										} catch (InterruptedException e) {
@@ -410,7 +444,7 @@ public class MLFQ extends Thread{
 							}else{
 								pcq[point].dequeue1();
 							}
-							
+							completionTime[pr.getPid()-1]= befre;
 						}
 						if(schedAssign[point].equals("SJF")||schedAssign[point].equals("NonPPrS")||schedAssign[point].equals("FCFS")){
 						}else{
@@ -483,6 +517,9 @@ public class MLFQ extends Thread{
 							}
 							qp.add(lad);
 							refresh();
+							if(!started[pr.getPid()-1])
+								startTime[pr.getPid()-1]= befre;
+							started[pr.getPid()-1]=true;
 							try {
 							  sleep(1000);
 							} catch (InterruptedException e) {
@@ -513,6 +550,7 @@ public class MLFQ extends Thread{
 							}else{
 								pcq[point].dequeue1();
 							}
+							completionTime[pr.getPid()-1]= befre;
 						}
 						if(sbt<=bef){
 							
@@ -548,6 +586,9 @@ public class MLFQ extends Thread{
 									}
 									qp.add(lad);
 									refresh();
+									if(!started[pr.getPid()-1])
+										startTime[pr.getPid()-1]= befre;
+									started[pr.getPid()-1]=true;
 									try {
 									  sleep(1000);
 									} catch (InterruptedException e) {
@@ -583,6 +624,7 @@ public class MLFQ extends Thread{
 									}else{
 										pcq[point].dequeue1();
 									}
+									completionTime[pr.getPid()-1]= befre;
 								}
 							}
 							point=0;
@@ -625,6 +667,9 @@ public class MLFQ extends Thread{
 							}
 							qp.add(lad);
 							refresh();
+							if(!started[pr.getPid()-1])
+								startTime[pr.getPid()-1]= befre;
+							started[pr.getPid()-1]=true;
 							try {
 							  sleep(1000);
 							} catch (InterruptedException e) {
@@ -659,6 +704,7 @@ public class MLFQ extends Thread{
 							}else{
 								pcq[point].dequeue1();
 							}
+							completionTime[pr.getPid()-1]= befre;
 						}
 						point=0;
 					}
@@ -695,6 +741,9 @@ public class MLFQ extends Thread{
 						}
 						qp.add(lad);
 						refresh();
+						if(!started[pr.getPid()-1])
+							startTime[pr.getPid()-1]= befre;
+						started[pr.getPid()-1]=true;
 						try {
 						  sleep(1000);
 						} catch (InterruptedException e) {
@@ -742,7 +791,17 @@ public class MLFQ extends Thread{
 			}
 		}
 		refresh();
-		 fin= true;
+		int sumresponse= 0, sumwaiting= 0;
+		for(int i=0; i<rct; i++){
+			model1.setValueAt(startTime[i]-arrivalTime[i], i, 1);
+			sumresponse+= (startTime[i]-arrivalTime[i]);
+			model1.setValueAt(completionTime[i]-arrivalTime[i], i, 2);
+			model1.setValueAt(completionTime[i]-arrivalTime[i]-burstTime[i], i, 3);
+			sumwaiting+= (completionTime[i]-arrivalTime[i]-burstTime[i]);
+		}
+		model1.addRow(new Object[] {"Ave. Response Time", ":", Float.toString((float)sumresponse/rct), "" });
+		model1.addRow(new Object[] {"Ave. Waiting Time", ":", Float.toString((float)sumwaiting/rct), "" });
+		fin= true;
 	}
 	public void exec(String scheduler, int index, int quantum, boolean preempt){
 		if(scheduler.equals("FCFS")){
@@ -779,7 +838,7 @@ public class MLFQ extends Thread{
 		JPanel p = new JPanel(new BorderLayout());  
 		DefaultTableModel model = new DefaultTableModel();
 		final JTable jt=new JTable(model);
-		DefaultTableModel model1 = new DefaultTableModel();
+		model1 = new DefaultTableModel();
 		final JTable jt1=new JTable(model1);
 		jt1.setEnabled(false);
 		jt.setEnabled(false);
@@ -789,7 +848,7 @@ public class MLFQ extends Thread{
 		model.addColumn("Priority");
 		
 		model1.addColumn("Process ID");
-		model1.addColumn("Remaining Burst Time");
+		model1.addColumn("Response Time");
 		model1.addColumn("Turnaround Time");
 		model1.addColumn("Waiting Time");
 		
@@ -875,6 +934,7 @@ public class MLFQ extends Thread{
 					rrAssign= new int[value];
 					priority= new int[value];
 					responded= new boolean[value];
+					
 					time= new int[value];
 					JLabel label[]= new JLabel[value];
 					
@@ -978,6 +1038,12 @@ public class MLFQ extends Thread{
 						model1.setRowCount(0);
 						process= new JLabel[jt.getRowCount()];
 						there= new boolean[value][jt.getRowCount()];
+						startTime= new int[jt.getRowCount()];
+						completionTime= new int[jt.getRowCount()];
+						started= new boolean[jt.getRowCount()];
+						burstTime= new int[jt.getRowCount()];
+						arrivalTime= new int[jt.getRowCount()];
+						rct= jt.getRowCount();
 						for (int i = 0; i < jt.getRowCount(); i++) {
 							int info[]= new int[4];
 							for (int j = 0; j < 4; j++) {
@@ -987,6 +1053,8 @@ public class MLFQ extends Thread{
 							 pcb1.add(new PCB(info[0],info[1],info[2],info[3]));
 							 process[i]= new JLabel("P"+info[0]);
 							 process[i].setBorder(new LineBorder(Color.BLACK, 2));
+							 burstTime[i]= info[2];
+							arrivalTime[i]= info[1];
 							 for(int m=0; m<value; m++){
 								there[m][i]= false;
 							 }
@@ -1012,68 +1080,6 @@ public class MLFQ extends Thread{
 						fin= false;
 						
 						new MLFQ().start();
-						//f.repaint();
-						//f.validate();
-						for(int i=0; i< value; i++){
-							int ind=i;
-							new Thread() {
-								public void run() {
-									try{
-									while(true){
-										
-										
-										q[ind].removeAll();
-										try {
-										  sleep(100);
-										} catch (InterruptedException e) {
-										  throw new RuntimeException(e);
-										}
-										if(fin)
-											break;
-										//q[ind].add(new JLabel("Q"+(ind+1)));
-										
-										int l=pcq[ind].getPCB().size();
-										ArrayList<PCB> pc= pcq[ind].getPCB();
-										for(int i=0; i<l; i++){
-											//JLabel lad= new JLabel("P"+Integer.toString(pc.get(i).getPid()));
-											model1.setValueAt(pc.get(i).getBurst_time(), pc.get(i).getPid()-1, 1);
-											
-											model1.setValueAt(pc.get(i).getCompletion_time()-pc.get(i).getArrival_time(), pc.get(i).getPid()-1, 2);
-											model1.setValueAt(pc.get(i).getCompletion_time()-pc.get(i).getArrival_time()-pc.get(i).getorigBurst_time(), pc.get(i).getPid()-1, 3);
-											//lad.setBorder(new LineBorder(Color.BLACK, 2));
-											//q[ind].add(lad);
-											
-										}
-										/*
-										for(int i=0; i<jt.getRowCount()-l; i++){
-											JLabel lad= new JLabel("  ");
-											lad.setBorder(new LineBorder(Color.BLACK, 2));
-											q[ind].add(lad);
-											
-										}
-										if(isFixedTimeSlots){
-											q[ind].add(new JLabel(Integer.toString(time[ind])));
-										}
-										f.add(qs,BorderLayout.CENTER);
-										*/
-										f.repaint();
-										f.revalidate();
-										try {
-										  sleep(100);
-										} catch (InterruptedException e) {
-										  throw new RuntimeException(e);
-										}
-										
-									}
-									}catch(Exception e){}
-									
-								}
-
-							}.start();
-						}
-						
-						
-						
 					} else {
 						
 					}
@@ -1085,7 +1091,7 @@ public class MLFQ extends Thread{
 		});
 		
         JScrollPane sp=new JScrollPane(jt);   
-		//JScrollPane sp1=new JScrollPane(jt1);   
+		JScrollPane sp1=new JScrollPane(jt1);   
          
 		p.add(sp, BorderLayout.CENTER);	
 		JPanel b= new JPanel();
@@ -1096,7 +1102,7 @@ public class MLFQ extends Thread{
 		
 		p.add(b, BorderLayout.SOUTH);		
 		f.add(p, BorderLayout.WEST); 
-		//f.add(sp1, BorderLayout.EAST); 	
+		f.add(sp1, BorderLayout.EAST); 	
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		f.setSize(new Dimension(1366, 600));
