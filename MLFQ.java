@@ -27,9 +27,11 @@ public class MLFQ extends Thread{
 	PCBQueue pcqinit;
 	static JPanel qs= new JPanel();;
 	static JPanel qp= new JPanel();;
+	static JPanel cp= new JPanel();;
 	static int artime=0;
 	int ditime[];
 	static int time[];
+	static int clock= 0;
 	String scheduler[];
 	static int totalbursttime=0;
 	static int value=0;
@@ -114,15 +116,12 @@ public class MLFQ extends Thread{
 						JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
 						lad.setBorder(new LineBorder(Color.BLACK, 2));
 						qp.add(lad);
+						
 						refresh();
 						if(!started[pr.getPid()-1])
 							startTime[pr.getPid()-1]= befre;
 						started[pr.getPid()-1]=true;
-						try {
-						  sleep(1000);
-						} catch (InterruptedException e) {
-						  throw new RuntimeException(e);
-						}
+						
 						pcq[point].rm(pr);
 						if(pr.getBurst_time()>0){
 							if(schedAssign[point].equals("RR")&&noOfqueues!=1){
@@ -133,6 +132,7 @@ public class MLFQ extends Thread{
 						}
 						if(befre!=pcq[point].show1()){
 							befre=pcq[point].show1();
+							timer(befre);
 							qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 							
 						}else{
@@ -183,11 +183,6 @@ public class MLFQ extends Thread{
 						if(!started[pr.getPid()-1])
 							startTime[pr.getPid()-1]= befre;
 						started[pr.getPid()-1]=true;
-						try {
-						  sleep(1000);
-						} catch (InterruptedException e) {
-						  throw new RuntimeException(e);
-						}
 						pcq[point].rm(pr);
 						if(pr.getBurst_time()>0){
 							pcq[point].rm(pr);
@@ -201,6 +196,7 @@ public class MLFQ extends Thread{
 						}
 						if(befre!=pcq[point].show1()){
 							befre=pcq[point].show1();
+							timer(befre);
 							qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 							
 						}else{
@@ -237,11 +233,6 @@ public class MLFQ extends Thread{
 					if(!started[pr.getPid()-1])
 						startTime[pr.getPid()-1]= befre;
 					started[pr.getPid()-1]=true;
-					try {
-					  sleep(1000);
-					} catch (InterruptedException e) {
-					  throw new RuntimeException(e);
-					}
 					pcq[point].rm(pr);
 					if(pr.getBurst_time()>0){
 						if(schedAssign[point].equals("RR")&&noOfqueues!=1){
@@ -251,6 +242,7 @@ public class MLFQ extends Thread{
 					}
 					if(befre!=pcq[point].show1()){
 						befre=pcq[point].show1();
+						timer(befre);
 						qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 						
 					}else{
@@ -290,11 +282,7 @@ public class MLFQ extends Thread{
 				if(!started[pr.getPid()-1])
 					startTime[pr.getPid()-1]= befre;
 				started[pr.getPid()-1]=true;
-				try {
-				  sleep(1000);
-				} catch (InterruptedException e) {
-				  throw new RuntimeException(e);
-				}
+				
 				if(befre!=pcq[point].show1()){
 					befre=pcq[point].show1();
 					qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
@@ -308,6 +296,7 @@ public class MLFQ extends Thread{
 						int c=0;
 						if(befre!=pcq[point].show1()){
 							befre=pcq[point].show1();
+							timer(befre);
 							qp.add(new JLabel(Integer.toString(c=pcq[point].dequeue1())));
 							System.out.println("SS"+c);	
 						}else{
@@ -366,6 +355,7 @@ public class MLFQ extends Thread{
 						
 						if(befre!=pcq[point].show1()){
 							befre=pcq[point].show1();
+							timer(befre);
 							qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 							
 						}else{
@@ -386,11 +376,7 @@ public class MLFQ extends Thread{
 							if(!started[pr.getPid()-1])
 								startTime[pr.getPid()-1]= befre;
 							started[pr.getPid()-1]=true;
-							try {
-							  sleep(1000);
-							} catch (InterruptedException e) {
-							  throw new RuntimeException(e);
-							}
+							
 							pcq[point].rm(pr);
 							if(pr.getBurst_time()<=0){
 								pcqinit.rm(pr);
@@ -411,17 +397,13 @@ public class MLFQ extends Thread{
 										if(!started[pr.getPid()-1])
 											startTime[pr.getPid()-1]= befre;
 										started[pr.getPid()-1]=true;
-										try {
-										  sleep(1000);
-										} catch (InterruptedException e) {
-										  throw new RuntimeException(e);
-										}
 										tm= tm+(time[point]);
 									}
 								}
 							}
 							if(befre!=pcq[point].show1()){
 								befre=pcq[point].show1();
+								timer(befre);
 								qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 								
 							}else{
@@ -501,11 +483,6 @@ public class MLFQ extends Thread{
 							if(!started[pr.getPid()-1])
 								startTime[pr.getPid()-1]= befre;
 							started[pr.getPid()-1]=true;
-							try {
-							  sleep(1000);
-							} catch (InterruptedException e) {
-							  throw new RuntimeException(e);
-							}
 							pcq[point].rm(pr);
 							if(pr.getBurst_time()>0){
 								if(schedAssign[point].equals("RR")){
@@ -525,6 +502,7 @@ public class MLFQ extends Thread{
 							
 							if(befre!=pcq[point].show1()){
 								befre=pcq[point].show1();
+								timer(befre);
 								qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 								
 							}else{
@@ -566,11 +544,6 @@ public class MLFQ extends Thread{
 									if(!started[pr.getPid()-1])
 										startTime[pr.getPid()-1]= befre;
 									started[pr.getPid()-1]=true;
-									try {
-									  sleep(1000);
-									} catch (InterruptedException e) {
-									  throw new RuntimeException(e);
-									}
 									if(pr.getBurst_time()>0){
 										
 										if(schedAssign[point].equals("RR")){
@@ -594,6 +567,7 @@ public class MLFQ extends Thread{
 									}
 									if(befre!=pcq[point].show1()){
 										befre=pcq[point].show1();
+										timer(befre);
 										qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 										
 									}else{
@@ -643,11 +617,6 @@ public class MLFQ extends Thread{
 							if(!started[pr.getPid()-1])
 								startTime[pr.getPid()-1]= befre;
 							started[pr.getPid()-1]=true;
-							try {
-							  sleep(1000);
-							} catch (InterruptedException e) {
-							  throw new RuntimeException(e);
-							}
 							pcq[point].rm(pr);
 							if(pr.getBurst_time()>0){
 								pcq[point].rm(pr);
@@ -671,6 +640,7 @@ public class MLFQ extends Thread{
 							}
 							if(befre!=pcq[point].show1()){
 								befre=pcq[point].show1();
+								timer(befre);
 								qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 								
 							}else{
@@ -713,11 +683,6 @@ public class MLFQ extends Thread{
 						if(!started[pr.getPid()-1])
 							startTime[pr.getPid()-1]= befre;
 						started[pr.getPid()-1]=true;
-						try {
-						  sleep(1000);
-						} catch (InterruptedException e) {
-						  throw new RuntimeException(e);
-						}
 						pcq[point].rm(pr);
 						if(pr.getBurst_time()>0){
 							
@@ -742,6 +707,7 @@ public class MLFQ extends Thread{
 						}
 						if(befre!=pcq[point].show1()){
 							befre=pcq[point].show1();
+							timer(befre);
 							qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 							
 						}else{
@@ -793,6 +759,19 @@ public class MLFQ extends Thread{
 		//f.add(qp,BorderLayout.SOUTH);
 		f.repaint();
 		f.revalidate();
+	}
+	public void timer(int befre){
+		while(clock<befre){
+			try {
+			  sleep(1000);
+			} catch (InterruptedException e) {
+			  throw new RuntimeException(e);
+			}
+			clock++;
+			cp.removeAll();
+			cp.add(new JLabel(Integer.toString(clock)));
+			refresh();
+		}
 	}
 	
 	public static void main(String[] args){
@@ -862,7 +841,7 @@ public class MLFQ extends Thread{
 				int burst=1;
 				int prio=1;
 				do{
-				burst= new Random().nextInt(11);
+				burst= new Random().nextInt(51);
 				prio= new Random().nextInt(11);
 				}while(burst==0||prio==0);
 				model.addRow(new Object[] {Integer.toString(rowct), Integer.toString(new Random().nextInt(11)), Integer.toString(burst),Integer.toString(prio) });
@@ -1045,7 +1024,11 @@ public class MLFQ extends Thread{
 		b.add(clear);
 		b.add(addRandomProcess);
 		
-		p.add(b, BorderLayout.SOUTH);		
+		p.add(b, BorderLayout.SOUTH);
+		cp.setLayout(new BorderLayout());
+		
+		cp.add(new JLabel(Integer.toString(clock)), BorderLayout.CENTER);
+		f.add(cp, BorderLayout.WEST); 
 		f.add(p, BorderLayout.CENTER); 
 		sp2.setPreferredSize(new Dimension(50,50));
 		f.add(sp2,BorderLayout.SOUTH);
