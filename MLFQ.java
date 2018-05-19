@@ -36,6 +36,7 @@ public class MLFQ extends Thread{
 	static int totalbursttime=0;
 	static int value=0;
 	static int start=0;
+	static int add=0;
 	static int noOfqueues;
 	static int befre=500;
 	static int qbefre=500;
@@ -50,6 +51,7 @@ public class MLFQ extends Thread{
 		
 	}
 	public void run() {
+		clock= 0;
 		st= false;
 		qp.removeAll();
 		qp.setLayout(new FlowLayout());
@@ -167,6 +169,7 @@ public class MLFQ extends Thread{
 					int bef;
 					if(befre!=pcq[point].show1()){
 						befre=pcq[point].show1();
+						timer(befre);
 						qp.add(new JLabel(Integer.toString(bef=pcq[point].dequeue1())));
 						
 					}else{
@@ -217,6 +220,7 @@ public class MLFQ extends Thread{
 				qbefre=point;
 				if(befre!=pcq[point].show1()){
 					befre=pcq[point].show1();
+					timer(befre);
 					qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 					
 				}else{
@@ -265,6 +269,7 @@ public class MLFQ extends Thread{
 				if(befre!=pcq[point].show1()){
 					if(schedAssign[point].equals("RR")){
 						befre=pcq[point].show1();
+						timer(befre);
 						qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 					}
 				}else{
@@ -285,6 +290,7 @@ public class MLFQ extends Thread{
 				
 				if(befre!=pcq[point].show1()){
 					befre=pcq[point].show1();
+					timer(befre);
 					qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 					
 				}else{
@@ -388,8 +394,19 @@ public class MLFQ extends Thread{
 									pcq[point].insert(pr);
 									pcqinit.update(pr);
 								}else{
-									if(pcq[point].show1()>artime){
+									while(pcq[point].show1()>artime){
+										timer(artime);
 										qp.add(new JLabel(Integer.toString(artime)));
+										for(int i=1; i<noOfqueues; i++){
+											if(qbefre!=point)
+												qp.add(new JLabel(" Q"+(i+1)+" "));
+											qbefre=i;
+											refresh();
+										}
+										if(qbefre!=point)
+											qp.add(new JLabel(" Q"+(1)+" "));
+										qbefre=1;
+										refresh();
 										lad= new JLabel("P"+ pr.getPid());
 										lad.setBorder(new LineBorder(Color.BLACK, 2));
 										qp.add(lad);
@@ -398,6 +415,7 @@ public class MLFQ extends Thread{
 											startTime[pr.getPid()-1]= befre;
 										started[pr.getPid()-1]=true;
 										tm= tm+(time[point]);
+										artime+= (time[point]);
 									}
 								}
 							}
@@ -430,239 +448,46 @@ public class MLFQ extends Thread{
 					}
 				}
 			}else{
-				start=0;
-				while(pcqinit.getSize()>0){
-					boolean idle= true;
-					for(int i=0; i< noOfqueues; i++){
-						if(pcq[i].getPCB().size()!=0){
-							idle= false;
-						}
-					}
-					int x=0;
-					if(idle&&(pcqinit.show().getArrival_time()>z)){
-						x=(pcqinit.show().getArrival_time()-z);
-						z= z+(pcqinit.show().getArrival_time()-z);
-						start=start+x;
-					}
-					idle=true;
-					artime=pcqinit.show().getArrival_time();
-					System.out.println("Ho"+ artime);
-					if(pcqinit.show().getArrival_time()<=z){
-						pcq[point].insert(pcqinit.dequeue());
-						int sbt= rrAssign[point]+z;
-						int bef= tm;
-						if(sbt<=tm){
-							exec(schedAssign[point], point, rrAssign[point], false);
-						}else{
-							artime=tm;
-							exec(schedAssign[point], point, rrAssign[point], true);
-							tm= tm+(time[point+1]);
-						}
-						if(pcq[point].getSize()!=0){
-							emp=1;
-						}
-						if(qbefre!=point)
-							qp.add(new JLabel(" Q"+(point+1)+" "));
-						qbefre=point;
-						int ber=0;
-						if(befre!=pcq[point].show1()){
-							befre=pcq[point].show1();
-							qp.add(new JLabel(Integer.toString(ber=pcq[point].dequeue1())));
-							
-						}else{
-							ber= pcq[point].dequeue1();
-						}
-						int siz= pcq[point].getSize();
-						for(int j=0; j<siz; j++){
-							PCB pr;
-							
-							JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
-							lad.setBorder(new LineBorder(Color.BLACK, 2));
-							qp.add(lad);
-							refresh();
-							if(!started[pr.getPid()-1])
-								startTime[pr.getPid()-1]= befre;
-							started[pr.getPid()-1]=true;
-							pcq[point].rm(pr);
-							if(pr.getBurst_time()>0){
-								if(schedAssign[point].equals("RR")){
-									if((pcq[point].show1()-ber)==rrAssign[point]){
-										pcq[point].rm(pr);
-										pcq[point+1].insert(pr);
-									}else{
-										pcq[point].rm(pr);
-										pcq[point].insert(pr);
-										rTime[point]= pcq[point].show1()-ber;
-									}
-								}else{
-									pcq[point].rm(pr);
-									pcq[point].insert(pr);
-								}
-							}
-							
-							if(befre!=pcq[point].show1()){
-								befre=pcq[point].show1();
-								timer(befre);
-								qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
-								
-							}else{
-								pcq[point].dequeue1();
-							}
-							completionTime[pr.getPid()-1]= befre;
-						}
-						if(sbt<=bef){
-							
-						}else{
-							for(int i=1; i<noOfqueues; i++){
-								point++;
-								tm-=ditime[point];
-								artime=tm;
-								exec(schedAssign[point], point, rrAssign[point], true);
-								ditime[point]=0;
-								tm+= time[(point+1)%(noOfqueues)];
-								if(qbefre!=point)
-									qp.add(new JLabel(" Q"+(point+1)+" "));
-								qbefre=point;
-								
-								ber=0;
-								if(befre!=pcq[point].show1()){
-									befre=pcq[point].show1();
-									qp.add(new JLabel(Integer.toString(ber=pcq[point].dequeue1())));
-									
-								}else{
-									ber= pcq[point].dequeue1();
-								}
-								
-								siz= pcq[point].getSize();
-								for(int j=0; j<siz; j++){
-									PCB pr;
-									
-									JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
-									lad.setBorder(new LineBorder(Color.BLACK, 2));
-									qp.add(lad);
-									refresh();
-									if(!started[pr.getPid()-1])
-										startTime[pr.getPid()-1]= befre;
-									started[pr.getPid()-1]=true;
-									if(pr.getBurst_time()>0){
-										
-										if(schedAssign[point].equals("RR")){
-											if((pcq[point].show1()-ber)==rrAssign[point]){
-												pcq[point].rm(pr);
-												pcq[(point+1)%(noOfqueues)].insert(pr);
-											}else{
-												pcq[point].rm(pr);
-												pcq[point].insert(pr);
-												rTime[point]= pcq[point].show1()-ber;
-											}
-										
-										}else{
-											pcq[point].rm(pr);
-											if(point!=0 && j==(siz-1)){
-												pcq[point-1].insert(pr);
-											}else{
-												pcq[point].insert(pr);
-											}
-										}
-									}
-									if(befre!=pcq[point].show1()){
-										befre=pcq[point].show1();
-										timer(befre);
-										qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
-										
-									}else{
-										pcq[point].dequeue1();
-									}
-									completionTime[pr.getPid()-1]= befre;
-								}
-							}
-							point=0;
-						}
-					}else{
-						
-						point= emp%(noOfqueues-1);
-						if((artime-z)>time[point]){
-							artime= time[point]+z;
-						}
-						ditime[point]= artime-z;
-						tm+=ditime[point];
-						
-						
-						exec(schedAssign[point], point, rrAssign[point], true);
-						
-						
-						if(pcq[point].getSize()==0){
-							emp++;
-						}
-						if(qbefre!=point)
-							qp.add(new JLabel(" Q"+(point+1)+" "));
-						qbefre=point;
-						int bef=0;
-						if(befre!=pcq[point].show1()){
-							befre=pcq[point].show1();
-							qp.add(new JLabel(Integer.toString(bef=pcq[point].dequeue1())));
-							
-						}else{
-							bef= pcq[point].dequeue1();
-						}
-						int siz= pcq[point].getSize();
-						
-						for(int j=0; j<siz; j++){
-							PCB pr;
-							
-							JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
-							lad.setBorder(new LineBorder(Color.BLACK, 2));
-							qp.add(lad);
-							refresh();
-							if(!started[pr.getPid()-1])
-								startTime[pr.getPid()-1]= befre;
-							started[pr.getPid()-1]=true;
-							pcq[point].rm(pr);
-							if(pr.getBurst_time()>0){
-								pcq[point].rm(pr);
-								if(schedAssign[point].equals("RR")&& rrAssign[point]==(pcq[point].show1()-bef)){
-									System.out.println("GG");
-									pcq[(point+1)%noOfqueues].insert(pr);
-								}else{
-									if(schedAssign[point].equals("RR")){
-										pcq[point].insert(pr);
-									}else{	
-										if(point!=0 && j==(siz-1)){
-											System.out.println("HH");
-											pcq[point-1].insert(pr);
-										}else{
-											pcq[point].insert(pr);
-										}
-									}
-								}
-								rTime[point]= pcq[point].show1()-bef;
-								
-							}
-							if(befre!=pcq[point].show1()){
-								befre=pcq[point].show1();
-								timer(befre);
-								qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
-								
-							}else{
-								pcq[point].dequeue1();
-							}
-							completionTime[pr.getPid()-1]= befre;
-						}
-						point=0;
-					}
-				}
-				
+				tm=pcqinit.show().getArrival_time();
 				while(true){
-					point=(point+1)%noOfqueues;
+					int prv= tm;
 					tm+=time[point];
-					
+					if(point==0 && pcqinit.getSize()>0){
+						boolean idle= true;
+						for(int i=0; i< noOfqueues; i++){
+							if(pcq[i].getPCB().size()!=0){
+								idle= false;
+							}
+						}
+						int x=0;
+						if(idle&&(pcqinit.show().getArrival_time()>z)){
+							x=(pcqinit.show().getArrival_time()-z);
+							z= z+(pcqinit.show().getArrival_time()-z);
+							start=start+x;
+						}
+						idle=true;
+						artime=pcqinit.show().getArrival_time();
+						System.out.println("Ho"+ artime);
+						
+							while(pcqinit.show().getArrival_time()<=tm){
+								System.out.println("K"+tm);
+								pcq[point].insert(pcqinit.dequeue());
+								if(pcqinit.getSize()<1){
+									break;
+								}
+							}
+						
+					}
 					artime=tm;
-					if((rrAssign[point]+z)<artime && schedAssign[point].equals("RR"))
-						artime=rrAssign[point]+z;
+					
 					exec(schedAssign[point], point, rrAssign[point], true);
 					if(qbefre!=point)
 						qp.add(new JLabel(" Q"+(point+1)+" "));
 					qbefre=point;
+					int siz= pcq[point].getSize();
+					if(siz==0){
+						tm= prv;
+					}
 					int ber;
 					if(befre!=pcq[point].show1()){
 						befre=pcq[point].show1();
@@ -672,7 +497,7 @@ public class MLFQ extends Thread{
 						ber= pcq[point].dequeue1();
 					}
 					System.out.println("Hej"+point);
-					int siz= pcq[point].getSize();
+					
 					for(int j=0; j<siz; j++){
 						PCB pr;
 						
@@ -687,14 +512,11 @@ public class MLFQ extends Thread{
 						if(pr.getBurst_time()>0){
 							
 							if(schedAssign[point].equals("RR")){
-								if((pcq[point].show1()-ber)==rrAssign[point]){
+								//if((pcq[point].show1()-ber)==rrAssign[point]){
 									pcq[point].rm(pr);
 									pcq[(point+1)%(noOfqueues)].insert(pr);
-								}else{
-									pcq[point].rm(pr);
-									pcq[point].insert(pr);
-									rTime[point]= pcq[point].show1()-ber;
-								}
+									System.out.println("Me");
+								
 							
 							}else{
 								pcq[point].rm(pr);
@@ -713,13 +535,29 @@ public class MLFQ extends Thread{
 						}else{
 							pcq[point].dequeue1();
 						}
-						if(z==totalbursttime+start){
+						if(pcq[point].getSize()>0){
+							if(pcq[point].show().getArrival_time()==pcq[point].show1()){
+								int c=0;
+								if(befre!=pcq[point].show1()){
+									befre=pcq[point].show1();
+									timer(befre);
+									qp.add(new JLabel(Integer.toString(c=pcq[point].dequeue1())));
+									System.out.println("SS"+c);	
+								}else{
+									pcq[point].dequeue1();
+								}
+							}
+						}
+						completionTime[pr.getPid()-1]= befre;
+						if(z==totalbursttime+start+add){
 							break;
 						}
 					}
-					if(z==totalbursttime+start){
+					if(z==totalbursttime+start+add){
 						break;
 					}
+					tm=z;
+					point=(point+1)%noOfqueues;
 				}
 			}
 		}
