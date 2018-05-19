@@ -439,12 +439,18 @@ public class PCBQueue{
 				}else{
 					quantum= befq;
 				}
+				if(pcb.get(i).getArrival_time()>MLFQ.z){
+					q1.add(MLFQ.z);
+					MLFQ.add= pcb.get(i).getArrival_time()-MLFQ.z;
+					MLFQ.z= pcb.get(i).getArrival_time();
+					
+				}
 				if(pcb.get(i).getBurst_time()>=quantum){
 					if(!preempt){
 					MLFQ.z+=quantum;
 					pcb.get(i).setBurst_time(pcb.get(i).getBurst_time()-quantum);
 					}else{
-						if((MLFQ.z+pcb.get(i).getBurst_time())>=MLFQ.artime){
+						if((MLFQ.z+quantum)>=MLFQ.artime){
 							pcb.get(i).setBurst_time(pcb.get(i).getBurst_time()-(MLFQ.artime-MLFQ.z));
 							MLFQ.z+=(MLFQ.artime-MLFQ.z);
 							enqueue(pcb.get(i));
@@ -460,7 +466,7 @@ public class PCBQueue{
 					MLFQ.z+=pcb.get(i).getBurst_time();
 					pcb.get(i).setBurst_time(0);
 					}else{
-						if((MLFQ.z+pcb.get(i).getBurst_time())>=MLFQ.artime){
+						if((MLFQ.z+quantum)>=MLFQ.artime){
 							pcb.get(i).setBurst_time(pcb.get(i).getBurst_time()-(MLFQ.artime-MLFQ.z));
 							MLFQ.z+=(MLFQ.artime-MLFQ.z);
 							enqueue(pcb.get(i));
