@@ -46,6 +46,8 @@ public class MLFQ extends Thread{
 	static JLabel process[];
 	static DefaultTableModel model1;
 	static int rct;
+	static Color rndcol[];
+	static Color rndcolp[];
 	public MLFQ(){
 		
 		
@@ -101,8 +103,11 @@ public class MLFQ extends Thread{
 					if(pcq[point].getSize()!=0){
 						emp=1;
 					}
-					if(qbefre!=point)
-						qp.add(new JLabel(" Q"+(point+1)+" "));
+					if(qbefre!=point){
+						JLabel ld;
+						qp.add(ld= new JLabel(" Q"+(point+1)+" "));
+						ld.setForeground(rndcol[point]);
+					}
 					qbefre=point;
 					if(befre!=pcq[point].show1()){
 						befre=pcq[point].show1();
@@ -116,7 +121,8 @@ public class MLFQ extends Thread{
 					for(int j=0; j<siz; j++){
 						PCB pr;
 						JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
-						lad.setBorder(new LineBorder(Color.BLACK, 2));
+						lad.setBorder(new LineBorder(rndcol[point], 2));
+						lad.setForeground(rndcolp[pr.getPid()-1]);
 						qp.add(lad);
 						
 						refresh();
@@ -134,7 +140,7 @@ public class MLFQ extends Thread{
 						}
 						if(befre!=pcq[point].show1()){
 							befre=pcq[point].show1();
-							timer(befre);
+							timer(befre, point);
 							qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 							
 						}else{
@@ -164,8 +170,11 @@ public class MLFQ extends Thread{
 						point=(point+1)%noOfqueues;
 						exec(schedAssign[point], point, rrAssign[point], true);
 					}
-					if(qbefre!=point)
-						qp.add(new JLabel(" Q"+(point+1)+" "));
+					if(qbefre!=point){
+						JLabel ld;
+						qp.add(ld= new JLabel(" Q"+(point+1)+" "));
+						ld.setForeground(rndcol[point]);
+					}
 					qbefre=point;
 					if(pcq[point].getSize1()!=0){
 						if(pcq[point].show1()<clock){
@@ -175,7 +184,7 @@ public class MLFQ extends Thread{
 					int bef;
 					if(befre!=pcq[point].show1()){
 						befre=pcq[point].show1();
-						timer(befre);
+						timer(befre, point);
 						qp.add(new JLabel(Integer.toString(bef=pcq[point].dequeue1())));
 						
 					}else{
@@ -186,7 +195,8 @@ public class MLFQ extends Thread{
 						PCB pr;
 						
 						JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
-						lad.setBorder(new LineBorder(Color.BLACK, 2));
+						lad.setBorder(new LineBorder(rndcol[point], 2));
+						lad.setForeground(rndcolp[pr.getPid()-1]);
 						qp.add(lad);
 						refresh();
 						if(!started[pr.getPid()-1])
@@ -213,7 +223,7 @@ public class MLFQ extends Thread{
 						}
 						if(befre!=pcq[point].show1()){
 							befre=pcq[point].show1();
-							timer(befre);
+							timer(befre, point);
 							qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 							
 						}else{
@@ -234,12 +244,17 @@ public class MLFQ extends Thread{
 						pcq[point].dequeue1();
 					}
 				}
-				if(qbefre!=point)
-					qp.add(new JLabel(" Q"+(point+1)+" "));
+				
+				if(qbefre!=point){
+					JLabel ld;
+					qp.add(ld= new JLabel(" Q"+(point+1)+" "));
+					ld.setForeground(rndcol[point]);
+				}
+				
 				qbefre=point;
 				if(befre!=pcq[point].show1()){
 					befre=pcq[point].show1();
-					timer(befre);
+					timer(befre, point);
 					qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 					
 				}else{
@@ -250,7 +265,8 @@ public class MLFQ extends Thread{
 				for(int j=0; j<siz; j++){
 					PCB pr;
 					JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
-					lad.setBorder(new LineBorder(Color.BLACK, 2));
+					lad.setBorder(new LineBorder(rndcol[point], 2));
+					lad.setForeground(rndcolp[pr.getPid()-1]);
 					qp.add(lad);
 					refresh();
 					if(!started[pr.getPid()-1])
@@ -265,7 +281,7 @@ public class MLFQ extends Thread{
 					}
 					if(befre!=pcq[point].show1()){
 						befre=pcq[point].show1();
-						timer(befre);
+						timer(befre, point);
 						qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 						
 					}else{
@@ -280,15 +296,18 @@ public class MLFQ extends Thread{
 			}else{
 				exec(schedAssign[point], point, rrAssign[point], false);
 			}
-			if(qbefre!=point)
-				qp.add(new JLabel(" Q"+(point+1)+" "));
+			if(qbefre!=point){
+				JLabel ld;
+				qp.add(ld= new JLabel(" Q"+(point+1)+" "));
+				ld.setForeground(rndcol[point]);
+			}
 			qbefre=point;
 			System.out.println("Yo"+pcq[point].getSize());
 			if(pcq[point].getSize1()>0){
 				if(befre!=pcq[point].show1()){
 					if(schedAssign[point].equals("RR")){
 						befre=pcq[point].show1();
-						timer(befre);
+						timer(befre, point);
 						qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 					}
 				}else{
@@ -300,7 +319,8 @@ public class MLFQ extends Thread{
 			for(int j=0; j<siz; j++){
 				PCB pr;
 				JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
-				lad.setBorder(new LineBorder(Color.BLACK, 2));
+				lad.setBorder(new LineBorder(rndcol[point], 2));
+				lad.setForeground(rndcolp[pr.getPid()-1]);
 				qp.add(lad);
 				refresh();
 				if(!started[pr.getPid()-1])
@@ -309,7 +329,7 @@ public class MLFQ extends Thread{
 				
 				if(befre!=pcq[point].show1()){
 					befre=pcq[point].show1();
-					timer(befre);
+					timer(befre, point);
 					qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 					
 				}else{
@@ -321,7 +341,7 @@ public class MLFQ extends Thread{
 						int c=0;
 						if(befre!=pcq[point].show1()){
 							befre=pcq[point].show1();
-							timer(befre);
+							timer(befre, point);
 							qp.add(new JLabel(Integer.toString(c=pcq[point].dequeue1())));
 							System.out.println("SS"+c);	
 						}else{
@@ -373,14 +393,17 @@ public class MLFQ extends Thread{
 							exec(schedAssign[point], point, rrAssign[point], false);
 						}
 						
-						if(qbefre!=point)
-							qp.add(new JLabel(" Q"+(point+1)+" "));
+						if(qbefre!=point){
+							JLabel ld;
+							qp.add(ld= new JLabel(" Q"+(point+1)+" "));
+							ld.setForeground(rndcol[point]);
+						}
 						qbefre=point;
 						
 						
 						if(befre!=pcq[point].show1()){
 							befre=pcq[point].show1();
-							timer(befre);
+							timer(befre, point);
 							qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 							
 						}else{
@@ -395,7 +418,8 @@ public class MLFQ extends Thread{
 							PCB pr;
 							
 							JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
-							lad.setBorder(new LineBorder(Color.BLACK, 2));
+							lad.setBorder(new LineBorder(rndcol[point], 2));
+							lad.setForeground(rndcolp[pr.getPid()-1]);
 							qp.add(lad);
 							refresh();
 							if(!started[pr.getPid()-1])
@@ -414,21 +438,29 @@ public class MLFQ extends Thread{
 									pcqinit.update(pr);
 								}else{
 									while(pcq[point].show1()>artime){
-										timer(artime);
+										timer(artime, point);
 										if(artime>=clock)
 										qp.add(new JLabel(Integer.toString(artime)));
 										for(int i=1; i<noOfqueues; i++){
-											if(qbefre!=point)
-												qp.add(new JLabel(" Q"+(i+1)+" "));
+											if(qbefre!=point){
+												JLabel ld;
+												qp.add(ld= new JLabel(" Q"+(point+1)+" "));
+												ld.setForeground(rndcol[point]);
+											}
 											qbefre=i;
 											refresh();
 										}
 										if(qbefre!=point)
-											qp.add(new JLabel(" Q"+(1)+" "));
+											if(qbefre!=point){
+												JLabel ld;
+												qp.add(ld= new JLabel(" Q"+(point+1)+" "));
+												ld.setForeground(rndcol[point]);
+											}
 										qbefre=1;
 										refresh();
 										lad= new JLabel("P"+ pr.getPid());
-										lad.setBorder(new LineBorder(Color.BLACK, 2));
+										lad.setBorder(new LineBorder(rndcol[point], 2));
+										lad.setForeground(rndcolp[pr.getPid()-1]);
 										qp.add(lad);
 										refresh();
 										if(!started[pr.getPid()-1])
@@ -441,7 +473,7 @@ public class MLFQ extends Thread{
 							}
 							if(befre!=pcq[point].show1()){
 								befre=pcq[point].show1();
-								timer(befre);
+								timer(befre, point);
 								qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 								
 							}else{
@@ -485,7 +517,7 @@ public class MLFQ extends Thread{
 						if(idle&&(pcqinit.show().getArrival_time()>z)){
 							x=(pcqinit.show().getArrival_time()-z);
 							z= z+(pcqinit.show().getArrival_time()-z);
-							timer(z);
+							timer(z, point);
 							start=start+x;
 							System.out.println("M"+start);
 						}
@@ -506,8 +538,11 @@ public class MLFQ extends Thread{
 					artime=tm;
 					
 					exec(schedAssign[point], point, rrAssign[point], true);
-					if(qbefre!=point)
-						qp.add(new JLabel(" Q"+(point+1)+" "));
+					if(qbefre!=point){
+						JLabel ld;
+						qp.add(ld= new JLabel(" Q"+(point+1)+" "));
+						ld.setForeground(rndcol[point]);
+					}
 					qbefre=point;
 					int siz= pcq[point].getSize();
 					if(siz==0){
@@ -516,7 +551,7 @@ public class MLFQ extends Thread{
 					int ber;
 					if(befre!=pcq[point].show1()){
 						befre=pcq[point].show1();
-						timer(befre);
+						timer(befre, point);
 						qp.add(new JLabel(Integer.toString(ber=pcq[point].dequeue1())));
 						
 					}else{
@@ -528,7 +563,8 @@ public class MLFQ extends Thread{
 						PCB pr;
 						
 						JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
-						lad.setBorder(new LineBorder(Color.BLACK, 2));
+						lad.setBorder(new LineBorder(rndcol[point], 2));
+						lad.setForeground(rndcolp[pr.getPid()-1]);
 						qp.add(lad);
 						refresh();
 						if(!started[pr.getPid()-1])
@@ -555,7 +591,7 @@ public class MLFQ extends Thread{
 						}
 						if(befre!=pcq[point].show1()){
 							befre=pcq[point].show1();
-							timer(befre);
+							timer(befre, point);
 							qp.add(new JLabel(Integer.toString(pcq[point].dequeue1())));
 							
 						}else{
@@ -566,7 +602,7 @@ public class MLFQ extends Thread{
 								int c=0;
 								if(befre!=pcq[point].show1()){
 									befre=pcq[point].show1();
-									timer(befre);
+									timer(befre, point);
 									qp.add(new JLabel(Integer.toString(c=pcq[point].dequeue1())));
 									System.out.println("SS"+c);	
 								}else{
@@ -624,7 +660,7 @@ public class MLFQ extends Thread{
 		f.repaint();
 		f.revalidate();
 	}
-	public void timer(int befre){
+	public void timer(int befre, int point){
 		while(clock<befre){
 			try {
 			  sleep(1000);
@@ -633,7 +669,9 @@ public class MLFQ extends Thread{
 			}
 			clock++;
 			cp.removeAll();
-			cp.add(new JLabel(Integer.toString(clock)));
+			JLabel lb;
+			cp.add(lb=new JLabel(Integer.toString(clock)));
+			lb.setForeground(rndcol[point]);
 			refresh();
 		}
 	}
@@ -794,9 +832,11 @@ public class MLFQ extends Thread{
 						});
 					}
 					JOptionPane.showMessageDialog(f, scrollPane);
-					
+					rndcol= new Color[value];
+					Random rand = new Random();
 					for(int i=0; i<value; i++){
 						priority[i]= (Integer) jspin[i].getValue();
+						rndcol[i]= new Color(rand.nextInt(128), rand.nextInt(128), rand.nextInt(128));
 					}
 					int temp = 0;
 					int rrtemp= 0;
@@ -847,13 +887,14 @@ public class MLFQ extends Thread{
 						started= new boolean[jt.getRowCount()];
 						burstTime= new int[jt.getRowCount()];
 						arrivalTime= new int[jt.getRowCount()];
+						rndcolp= new Color[jt.getRowCount()];
 						rct= jt.getRowCount();
 						for (int i = 0; i < jt.getRowCount(); i++) {
 							int info[]= new int[4];
 							for (int j = 0; j < 4; j++) {
 								info[j] = Integer.parseInt((String) jt.getValueAt(i, j));
 							}
-							
+							rndcolp[i]= new Color(rand.nextInt(128), rand.nextInt(128), rand.nextInt(128));
 							 pcb1.add(new PCB(info[0],info[1],info[2],info[3]));
 							 process[i]= new JLabel("P"+info[0]);
 							 process[i].setBorder(new LineBorder(Color.BLACK, 2));
