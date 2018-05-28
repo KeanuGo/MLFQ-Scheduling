@@ -77,7 +77,7 @@ public class MLFQ extends Thread{
 		
 		int point=0;
 		
-		z=pcqinit.show().getArrival_time();
+		//z=pcqinit.show().getArrival_time();
 		start=pcqinit.show().getArrival_time();
 		if(!isFixedTimeSlots){
 			while(pcqinit.getSize()>0){
@@ -160,12 +160,18 @@ public class MLFQ extends Thread{
 					point= emp%(noOfqueues-1);
 					
 					exec(schedAssign[point], point, rrAssign[point], true);
-					if(pcq[point].getSize()==0){
-						emp++;
+					while(pcq[point].getSize()==0){
+						point=(point+1)%noOfqueues;
+						exec(schedAssign[point], point, rrAssign[point], true);
 					}
 					if(qbefre!=point)
 						qp.add(new JLabel(" Q"+(point+1)+" "));
 					qbefre=point;
+					if(pcq[point].getSize1()!=0){
+						if(pcq[point].show1()<clock){
+							pcq[point].dequeue1();
+						}
+					}
 					int bef;
 					if(befre!=pcq[point].show1()){
 						befre=pcq[point].show1();
@@ -192,7 +198,15 @@ public class MLFQ extends Thread{
 							if(schedAssign[point].equals("RR")&& rrAssign[point]==(pcq[point].show1()-bef)){
 								pcq[(point+1)%noOfqueues].insert(pr);
 							}else{
-								pcq[point].insert(pr);
+								if(schedAssign[point].equals("RR")){
+									pcq[point].insert(pr);
+								}else{
+									if(point!=0 && j==(siz-1)){
+										pcq[point-1].insert(pr);
+									}else{
+										pcq[point].insert(pr);
+									}
+								}
 							}
 							rTime[point]= pcq[point].show1()-bef;
 							
@@ -215,6 +229,11 @@ public class MLFQ extends Thread{
 			for(int i=1; i<noOfqueues-1; i++){
 				point++;
 				exec(schedAssign[point], point, rrAssign[point], false);
+				if(pcq[point].getSize1()!=0){
+					if(pcq[point].show1()<clock){
+						pcq[point].dequeue1();
+					}
+				}
 				if(qbefre!=point)
 					qp.add(new JLabel(" Q"+(point+1)+" "));
 				qbefre=point;
@@ -396,6 +415,7 @@ public class MLFQ extends Thread{
 								}else{
 									while(pcq[point].show1()>artime){
 										timer(artime);
+										if(artime>=clock)
 										qp.add(new JLabel(Integer.toString(artime)));
 										for(int i=1; i<noOfqueues; i++){
 											if(qbefre!=point)
@@ -449,6 +469,7 @@ public class MLFQ extends Thread{
 				}
 			}else{
 				tm=pcqinit.show().getArrival_time();
+				int d= 0;
 				while(true){
 					int prv= tm;
 					tm+=time[point];
@@ -460,18 +481,22 @@ public class MLFQ extends Thread{
 							}
 						}
 						int x=0;
+						System.out.println("M"+idle+z);
 						if(idle&&(pcqinit.show().getArrival_time()>z)){
 							x=(pcqinit.show().getArrival_time()-z);
 							z= z+(pcqinit.show().getArrival_time()-z);
+							timer(z);
 							start=start+x;
+							System.out.println("M"+start);
 						}
 						idle=true;
 						artime=pcqinit.show().getArrival_time();
 						System.out.println("Ho"+ artime);
-						
-							while(pcqinit.show().getArrival_time()<=tm){
+							d=clock;
+							while(pcqinit.show().getArrival_time()<=tm && pcqinit.show().getArrival_time()<=d){
 								System.out.println("K"+tm);
 								pcq[point].insert(pcqinit.dequeue());
+								d+= rrAssign[point];
 								if(pcqinit.getSize()<1){
 									break;
 								}
@@ -491,6 +516,7 @@ public class MLFQ extends Thread{
 					int ber;
 					if(befre!=pcq[point].show1()){
 						befre=pcq[point].show1();
+						timer(befre);
 						qp.add(new JLabel(Integer.toString(ber=pcq[point].dequeue1())));
 						
 					}else{
