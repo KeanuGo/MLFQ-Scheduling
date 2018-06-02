@@ -1186,7 +1186,7 @@ public class MLFQ extends Thread{
 		f.add(p, BorderLayout.WEST); 
 		sp2.setPreferredSize(new Dimension(850,400));
 		f.add(panel,BorderLayout.CENTER);
-		f.add(cp, BorderLayout.EAST); 	
+		f.add(cp, BorderLayout.SOUTH); 	
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		f.setSize(new Dimension(1366, 600));
