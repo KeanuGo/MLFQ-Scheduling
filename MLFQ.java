@@ -30,6 +30,7 @@ public class MLFQ extends Thread{
 	static JPanel qs= new JPanel();
 	static JPanel qp= new JPanel();
 	static JPanel cp= new JPanel();
+	static JPanel finalGantt = new JPanel(new BorderLayout());
 	static JPanel que;
 	static JPanel count = new JPanel();
 
@@ -91,10 +92,13 @@ public class MLFQ extends Thread{
 		if(!isFixedTimeSlots){
 
 			que = new JPanel();
+			JPanel que2 = new JPanel();
 			
 			for(int i = 0; i < quePanel.length; i++){
 				qp.add(quePanel[i]);
 			}
+
+			finalGantt.add(que2, BorderLayout.CENTER);
 			//qp.add(que, BorderLayout.CENTER);
 			//qp.add(count, BorderLayout.SOUTH);
 
@@ -159,7 +163,8 @@ public class MLFQ extends Thread{
 					
 					for(int j=0; j<siz; j++){
 						PCB pr;
-						JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
+						pr=pcq[point].dequeue();
+						JLabel lad= new JLabel("P"+ pr.getPid());
 						lad.setBorder(new LineBorder(Color.BLACK, 2));
 						lad.setPreferredSize(new Dimension(50, 150));
 						lad.setForeground(Color.WHITE);
@@ -169,6 +174,17 @@ public class MLFQ extends Thread{
     					lad.setVerticalAlignment(JLabel.CENTER);
 						//que.add(lad);
 						quePanel[point].add(lad);
+
+						JLabel label3= new JLabel("P"+ pr.getPid());
+						label3.setBorder(new LineBorder(Color.BLACK, 2));
+						label3.setPreferredSize(new Dimension(50, 120));
+						label3.setForeground(Color.WHITE);
+						label3.setOpaque(true);
+						label3.setBackground(rndcolp[pr.getPid()-1]);
+						label3.setHorizontalAlignment(JLabel.CENTER);
+    					label3.setVerticalAlignment(JLabel.CENTER);
+
+						que2.add(label3);
 
 						for(int k = 0; k < quePanel.length; k++){
 							if(k != point){
@@ -258,8 +274,8 @@ public class MLFQ extends Thread{
 					int siz= pcq[point].getSize();
 					for(int j=0; j<siz; j++){
 						PCB pr;
-						
-						JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
+						pr=pcq[point].dequeue();
+						JLabel lad= new JLabel("P"+ pr.getPid());
 						lad.setBorder(new LineBorder(Color.BLACK, 2));
 						lad.setPreferredSize(new Dimension(50, 150));
 						lad.setForeground(Color.WHITE);
@@ -269,6 +285,17 @@ public class MLFQ extends Thread{
     					lad.setVerticalAlignment(JLabel.CENTER);
 						//que.add(lad);
 						quePanel[point].add(lad);
+
+						JLabel label3= new JLabel("P"+ pr.getPid());
+						label3.setBorder(new LineBorder(Color.BLACK, 2));
+						label3.setPreferredSize(new Dimension(50, 120));
+						label3.setForeground(Color.WHITE);
+						label3.setOpaque(true);
+						label3.setBackground(rndcolp[pr.getPid()-1]);
+						label3.setHorizontalAlignment(JLabel.CENTER);
+    					label3.setVerticalAlignment(JLabel.CENTER);
+
+						que2.add(label3);
 
 						for(int k = 0; k < quePanel.length; k++){
 							if(k != point){
@@ -353,16 +380,27 @@ public class MLFQ extends Thread{
 				int siz= pcq[point].getSize();
 				for(int j=0; j<siz; j++){
 					PCB pr;
-					JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
+					pr=pcq[point].dequeue();
+					JLabel lad= new JLabel("P"+ pr.getPid());
 					lad.setBorder(new LineBorder(Color.BLACK, 2));
 					lad.setPreferredSize(new Dimension(50, 150));
 					lad.setForeground(Color.WHITE);
 					lad.setOpaque(true);
 					lad.setBackground(rndcolp[pr.getPid()-1]);
 					lad.setHorizontalAlignment(JLabel.CENTER);
-    				lad.setVerticalAlignment(JLabel.CENTER);
-					//que.add(lad);
+					lad.setVerticalAlignment(JLabel.CENTER);
 					quePanel[point].add(lad);
+					
+					JLabel label3= new JLabel("P"+ pr.getPid());
+					label3.setBorder(new LineBorder(Color.BLACK, 2));
+					label3.setPreferredSize(new Dimension(50, 120));
+					label3.setForeground(Color.WHITE);
+					label3.setOpaque(true);
+					label3.setBackground(rndcolp[pr.getPid()-1]);
+					label3.setHorizontalAlignment(JLabel.CENTER);
+					label3.setVerticalAlignment(JLabel.CENTER);
+
+					que2.add(label3);
 
 					for(int k = 0; k < quePanel.length; k++){
 						if(k != point){
@@ -430,16 +468,28 @@ public class MLFQ extends Thread{
 			
 			for(int j=0; j<siz; j++){
 				PCB pr;
-				JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
+				pr=pcq[point].dequeue();
+				JLabel lad= new JLabel("P"+ pr.getPid());
 				lad.setBorder(new LineBorder(Color.BLACK, 2));
 				lad.setPreferredSize(new Dimension(50, 150));
 				lad.setForeground(Color.WHITE);
 				lad.setOpaque(true);
 				lad.setBackground(rndcolp[pr.getPid()-1]);
 				lad.setHorizontalAlignment(JLabel.CENTER);
-    			lad.setVerticalAlignment(JLabel.CENTER);
+				lad.setVerticalAlignment(JLabel.CENTER);
 				//que.add(lad);
 				quePanel[point].add(lad);
+				
+				JLabel label3= new JLabel("P"+ pr.getPid());
+				label3.setBorder(new LineBorder(Color.BLACK, 2));
+				label3.setPreferredSize(new Dimension(50, 120));
+				label3.setForeground(Color.WHITE);
+				label3.setOpaque(true);
+				label3.setBackground(rndcolp[pr.getPid()-1]);
+				label3.setHorizontalAlignment(JLabel.CENTER);
+				label3.setVerticalAlignment(JLabel.CENTER);
+
+				que2.add(label3);
 
 				for(int k = 0; k < quePanel.length; k++){
 					if(k != point){
@@ -490,10 +540,12 @@ public class MLFQ extends Thread{
 		}else{
 
 			que = new JPanel();
+			JPanel que2 = new JPanel();
 
 			for(int i = 0; i < quePanel.length; i++){
 				qp.add(quePanel[i]);
 			}
+			finalGantt.add(que2);
 
 			ArrayList<PCB> rem= new ArrayList<PCB>();
 			int now=0;
@@ -563,17 +615,27 @@ public class MLFQ extends Thread{
 								artime=tm;
 							}
 							PCB pr;
-							
-							JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
+							pr=pcq[point].dequeue();
+							JLabel lad= new JLabel("P"+ pr.getPid());
 							lad.setBorder(new LineBorder(Color.BLACK, 2));
 							lad.setPreferredSize(new Dimension(50, 150));
 							lad.setForeground(Color.WHITE);
 							lad.setOpaque(true);
 							lad.setBackground(rndcolp[pr.getPid()-1]);
 							lad.setHorizontalAlignment(JLabel.CENTER);
-    						lad.setVerticalAlignment(JLabel.CENTER);
+	    					lad.setVerticalAlignment(JLabel.CENTER);
 							//que.add(lad);
 							quePanel[point].add(lad);
+							JLabel label3= new JLabel("P"+ pr.getPid());
+							label3.setBorder(new LineBorder(Color.BLACK, 2));
+							label3.setPreferredSize(new Dimension(50, 120));
+							label3.setForeground(Color.WHITE);
+							label3.setOpaque(true);
+							label3.setBackground(rndcolp[pr.getPid()-1]);
+							label3.setHorizontalAlignment(JLabel.CENTER);
+	    					label3.setVerticalAlignment(JLabel.CENTER);
+
+							que2.add(label3);
 
 							for(int k = 0; k < quePanel.length; k++){
 								if(k != point){
@@ -627,9 +689,25 @@ public class MLFQ extends Thread{
 										refresh();
 										lad= new JLabel("P"+ pr.getPid());
 										lad.setBorder(new LineBorder(Color.BLACK, 2));
-										lad.setForeground(rndcolp[pr.getPid()-1]);
+										lad.setPreferredSize(new Dimension(50, 150));
+										lad.setForeground(Color.WHITE);
+										lad.setOpaque(true);
+										lad.setBackground(rndcolp[pr.getPid()-1]);
+										lad.setHorizontalAlignment(JLabel.CENTER);
+				    					lad.setVerticalAlignment(JLabel.CENTER);
 										//que.add(lad);
 										quePanel[point].add(lad);
+
+										label3= new JLabel("P"+ pr.getPid());
+										label3.setBorder(new LineBorder(Color.BLACK, 2));
+										label3.setPreferredSize(new Dimension(50, 100));
+										label3.setForeground(Color.WHITE);
+										label3.setOpaque(true);
+										label3.setBackground(rndcolp[pr.getPid()-1]);
+										label3.setHorizontalAlignment(JLabel.CENTER);
+				    					label3.setVerticalAlignment(JLabel.CENTER);
+
+										que2.add(label3);
 
 										for(int k = 0; k < quePanel.length; k++){
 											if(k != point){
@@ -753,8 +831,8 @@ public class MLFQ extends Thread{
 					
 					for(int j=0; j<siz; j++){
 						PCB pr;
-						
-						JLabel lad= new JLabel("P"+ (pr=pcq[point].dequeue()).getPid());
+						pr=pcq[point].dequeue();
+						JLabel lad= new JLabel("P"+ pr.getPid());
 						lad.setBorder(new LineBorder(Color.BLACK, 2));
 						lad.setPreferredSize(new Dimension(50, 150));
 						lad.setForeground(Color.WHITE);
@@ -764,6 +842,17 @@ public class MLFQ extends Thread{
     					lad.setVerticalAlignment(JLabel.CENTER);
 						//que.add(lad);
 						quePanel[point].add(lad);
+
+						JLabel label3= new JLabel("P"+ pr.getPid());
+						label3.setBorder(new LineBorder(Color.BLACK, 2));
+						label3.setPreferredSize(new Dimension(50, 120));
+						label3.setForeground(Color.WHITE);
+						label3.setOpaque(true);
+						label3.setBackground(rndcolp[pr.getPid()-1]);
+						label3.setHorizontalAlignment(JLabel.CENTER);
+    					label3.setVerticalAlignment(JLabel.CENTER);
+
+						que2.add(label3);
 
 						for(int k = 0; k < quePanel.length; k++){
 							if(k != point){
@@ -1054,7 +1143,7 @@ public class MLFQ extends Thread{
 						});
 					}
 					JOptionPane.showMessageDialog(f, scrollPane);
-					System.out.println(value);
+					//System.out.println(value);
 					rndcol= new Color[value];
 					quePanel = new JPanel[value];
 					Random rand = new Random();
@@ -1151,11 +1240,17 @@ public class MLFQ extends Thread{
 		JScrollPane sp1=new JScrollPane(jt1);
 		JScrollPane sp2=new JScrollPane(qp); 
 
+		JLabel label4 = new JLabel("GANTT CHART");
+		finalGantt.add(label4, BorderLayout.WEST);
+		JScrollPane sp3=new JScrollPane(finalGantt); 
+
 		int horizontalPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED;  
 		int verticalPolicy = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED;  
 		sp2.setHorizontalScrollBarPolicy(horizontalPolicy);
         sp2.setVerticalScrollBarPolicy(verticalPolicy);
 
+        sp3.setHorizontalScrollBarPolicy(horizontalPolicy);
+        sp3.setVerticalScrollBarPolicy(verticalPolicy);
 
 		JPanel b= new JPanel(new BorderLayout());
 		JPanel pan = new JPanel();
@@ -1181,10 +1276,12 @@ public class MLFQ extends Thread{
 		//f.add(cp, BorderLayout.EAST);
 
 		gantt.add(sp2);
+		gantt.add(sp3);
 		panel.add(gantt);
 
 		f.add(p, BorderLayout.WEST); 
 		sp2.setPreferredSize(new Dimension(850,400));
+		sp3.setPreferredSize(new Dimension(850,130));
 		f.add(panel,BorderLayout.CENTER);
 		f.add(cp, BorderLayout.SOUTH); 	
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
